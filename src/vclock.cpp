@@ -52,6 +52,16 @@ namespace vc
         tick = std::max(tick, other.tick);
     }
 
+    struct same_clock
+    {
+        clock lhs;
+
+        bool operator()( const clock& rhs ) const
+        {
+            return rhs.name == lhs.name;
+        }
+    };
+
     vclock::vclock(clock default_clock)
         : causal_history({default_clock}), default_clock(default_clock), last_ticked(default_clock)
     {
@@ -60,6 +70,7 @@ namespace vc
     void vclock::tick()
     {
         ++(*std::find(std::begin(causal_history), std::end(causal_history), default_clock));
+        last_ticked = default_clock;
     }
 
     void vclock::merge(const vclock &other)
@@ -68,11 +79,13 @@ namespace vc
 
         for (const auto &c : other.causal_history)
         {
-            auto this_clock = std::find(std::begin(causal_history), std::end(causal_history), default_clock);
+            same_clock a{ c };
+
+            auto this_clock = std::find_if(std::begin(causal_history), std::end(causal_history), a);
 
             if (this_clock == std::cend(causal_history))
             {
-                causal_history.push_back(*this_clock);
+                causal_history.push_back(c);
                 precedes = false;
             }
             else
