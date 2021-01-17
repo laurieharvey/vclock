@@ -56,7 +56,7 @@ namespace vc
     {
         clock lhs;
 
-        bool operator()( const clock& rhs ) const
+        bool operator()(const clock &rhs) const
         {
             return rhs.name == lhs.name;
         }
@@ -69,41 +69,47 @@ namespace vc
 
     void vclock::tick()
     {
-        ++(*std::find(std::begin(causal_history), std::end(causal_history), default_clock));
+        ++(*std::find_if(std::begin(causal_history), std::end(causal_history), same_clock{default_clock}));
         last_ticked = default_clock;
     }
 
-    void vclock::merge(const vclock &other)
+    void vclock::merge(const vclock &src)
     {
-        bool precedes = true;
+        bool src_has_dst_clocks = true, no_dst_clocks_supercede_src = true, one_dst_clock_precedes_src = false;
 
-        for (const auto &c : other.causal_history)
+        for (const auto &src_clock : src.causal_history)
         {
-            same_clock a{ c };
+            auto dst_clock = std::find_if(std::begin(causal_history), std::end(causal_history), same_clock{src_clock});
 
-            auto this_clock = std::find_if(std::begin(causal_history), std::end(causal_history), a);
-
-            if (this_clock == std::cend(causal_history))
+            if (dst_clock == std::cend(causal_history))
             {
-                causal_history.push_back(c);
-                precedes = false;
+                one_dst_clock_precedes_src = true;
+
+                causal_history.push_back(src_clock);
             }
             else
             {
-                if ((*this_clock) < c)
+                if ((*dst_clock) < src_clock)
                 {
-                    this_clock->update(c);
+                    one_dst_clock_precedes_src = true;
+
+                    dst_clock->update(src_clock);
                 }
-                else if ((*this_clock) > c)
+                else if ((*dst_clock) > src_clock)
                 {
-                    precedes = false;
+                    no_dst_clocks_supercede_src = false;
                 }
             }
         }
 
-        if (precedes)
+        if (causal_history.size() != src.causal_history.size())
+            src_has_dst_clocks = false;
+
+        bool dst_precedes_src = src_has_dst_clocks && no_dst_clocks_supercede_src && one_dst_clock_precedes_src;
+
+        if (dst_precedes_src)
         {
-            last_ticked = other.last_ticked;
+            last_ticked = src.last_ticked;
         }
         else
         {
@@ -111,10 +117,11 @@ namespace vc
         }
     }
 
-    bool vclock::operator<(const vclock &rhs) const
+    bool operator<(const vclock &lhs, const vclock &rhs)
     {
-        auto rhs_clock = std::find_if(std::begin(rhs.causal_history), std::end(rhs.causal_history), 
-           [this](const clock& c){ return this->last_ticked.name == c.name; });
+        auto rhs_clock = std::find_if(std::begin(rhs.causal_history), std::end(rhs.causal_history), same_clock{lhs.last_ticked});
+
+        auto lhs_last_ticked = std::find_if(std::cbegin(lhs.causal_history), std::cend(lhs.causal_history), same_clock{lhs.last_ticked});
 
         if (rhs_clock == std::cend(rhs.causal_history))
         {
@@ -122,27 +129,28 @@ namespace vc
         }
         else
         {
-            return last_ticked < *rhs_clock;
+            return *lhs_last_ticked < *rhs_clock || *lhs_last_ticked == *rhs_clock && lhs.last_ticked.name != rhs.last_ticked.name;
         }
     }
 
-    bool vclock::operator==(const vclock &rhs) const
+    bool operator>(const vclock &lhs, const vclock &rhs)
     {
-        return last_ticked.name == rhs.last_ticked.name && last_ticked == rhs.last_ticked;
-    }
+        auto lhs_clock = std::find_if(std::begin(lhs.causal_history), std::end(lhs.causal_history), same_clock{rhs.last_ticked});
 
-    bool vclock::operator>(const vclock &rhs) const
-    {
-        auto rhs_clock = std::find_if(std::begin(rhs.causal_history), std::end(rhs.causal_history), 
-           [this](const clock& c){ return this->last_ticked.name == c.name; });
-           
-        if (rhs_clock == std::cend(rhs.causal_history))
+        auto rhs_last_ticked = std::find_if(std::cbegin(rhs.causal_history), std::cend(rhs.causal_history), same_clock{rhs.last_ticked});
+
+        if (lhs_clock == std::cend(lhs.causal_history))
         {
             return false;
         }
         else
         {
-            return last_ticked > *rhs_clock;
+            return *rhs_last_ticked < *lhs_clock || *rhs_last_ticked == *lhs_clock && lhs.last_ticked.name != rhs.last_ticked.name;
         }
+    }
+
+    bool operator==(const vclock &lhs, const vclock &rhs)
+    {
+        return lhs.last_ticked.name == rhs.last_ticked.name && lhs.last_ticked == rhs.last_ticked;
     }
 } // namespace vc

@@ -24,5 +24,11 @@ TEST(vclock, merge)
 
     a.merge(b);
 
+    EXPECT_LT(b, a);
     EXPECT_GT(a, b);
+
+    b.merge(a);
+
+    EXPECT_EQ(a, b);
+    EXPECT_EQ(b, a);
 }

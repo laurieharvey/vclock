@@ -39,10 +39,9 @@ namespace vc
 
         void merge(const vclock &other);
 
-        bool operator<(const vclock &rhs) const;
+        friend bool operator<(const vclock &lhs, const vclock &rhs);
+        friend bool operator>(const vclock &lhs, const vclock &rhs);
 
-        bool operator==(const vclock &rhs) const;
-
-        bool operator>(const vclock &rhs) const;
+        friend bool operator==(const vclock &lhs, const vclock &rhs);
     };
 } // namespace vc
