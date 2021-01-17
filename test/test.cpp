@@ -22,12 +22,12 @@ TEST(vclock, merge)
     vc::vclock a(vc::clock{"a", 0});
     vc::vclock b(vc::clock{"b", 0});
 
-    a.merge(b);
+    merge(b, a);
 
     EXPECT_LT(b, a);
     EXPECT_GT(a, b);
 
-    b.merge(a);
+    merge(a, b);
 
     EXPECT_EQ(a, b);
     EXPECT_EQ(b, a);

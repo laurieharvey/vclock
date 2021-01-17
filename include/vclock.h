@@ -26,6 +26,7 @@ namespace vc
     class vclock
     {
         std::vector<clock> causal_history;
+
     public:
         using name_type = clock::name_type;
         using tick_type = clock::tick_type;
@@ -37,11 +38,13 @@ namespace vc
 
         void tick();
 
-        void merge(const vclock &other);
+        friend void merge(const vclock &src, vclock &dest);
 
         friend bool operator<(const vclock &lhs, const vclock &rhs);
         friend bool operator>(const vclock &lhs, const vclock &rhs);
 
+        friend bool operator<=(const vclock &lhs, const vclock &rhs);
+        friend bool operator>=(const vclock &lhs, const vclock &rhs);
         friend bool operator==(const vclock &lhs, const vclock &rhs);
     };
 } // namespace vc

@@ -73,19 +73,19 @@ namespace vc
         last_ticked = default_clock;
     }
 
-    void vclock::merge(const vclock &src)
+    void merge(const vclock &src, vclock &dest)
     {
         bool src_has_dst_clocks = true, no_dst_clocks_supercede_src = true, one_dst_clock_precedes_src = false;
 
         for (const auto &src_clock : src.causal_history)
         {
-            auto dst_clock = std::find_if(std::begin(causal_history), std::end(causal_history), same_clock{src_clock});
+            auto dst_clock = std::find_if(std::begin(dest.causal_history), std::end(dest.causal_history), same_clock{src_clock});
 
-            if (dst_clock == std::cend(causal_history))
+            if (dst_clock == std::cend(dest.causal_history))
             {
                 one_dst_clock_precedes_src = true;
 
-                causal_history.push_back(src_clock);
+                dest.causal_history.push_back(src_clock);
             }
             else
             {
@@ -102,18 +102,18 @@ namespace vc
             }
         }
 
-        if (causal_history.size() != src.causal_history.size())
+        if (dest.causal_history.size() != src.causal_history.size())
             src_has_dst_clocks = false;
 
         bool dst_precedes_src = src_has_dst_clocks && no_dst_clocks_supercede_src && one_dst_clock_precedes_src;
 
         if (dst_precedes_src)
         {
-            last_ticked = src.last_ticked;
+            dest.last_ticked = src.last_ticked;
         }
         else
         {
-            tick();
+            dest.tick();
         }
     }
 
@@ -147,6 +147,16 @@ namespace vc
         {
             return *rhs_last_ticked < *lhs_clock || *rhs_last_ticked == *lhs_clock && lhs.last_ticked.name != rhs.last_ticked.name;
         }
+    }
+
+    bool operator<=(const vclock &lhs, const vclock &rhs)
+    {
+        return lhs < rhs || lhs == rhs;
+    }
+
+    bool operator>=(const vclock &lhs, const vclock &rhs)
+    {
+        return lhs > rhs || lhs == rhs;
     }
 
     bool operator==(const vclock &lhs, const vclock &rhs)
