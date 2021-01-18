@@ -1,6 +1,7 @@
 #include "gtest/gtest.h"
 
 #include "vclock.h"
+#include "utilities.h"
 
 TEST(vclock, precedes)
 {
@@ -31,4 +32,23 @@ TEST(vclock, merge)
 
     EXPECT_EQ(a, b);
     EXPECT_EQ(b, a);
+}
+
+TEST(vclock, comparible)
+{
+    vc::vclock a(vc::clock{"a", 0});
+    vc::vclock b(vc::clock{"b", 0});
+
+    EXPECT_FALSE(vc::comparible(a, b));
+    EXPECT_FALSE(vc::comparible(b, a));
+
+    merge(b, a);
+
+    EXPECT_TRUE(vc::comparible(a, b));
+    EXPECT_TRUE(vc::comparible(b, a));
+
+    merge(a, b);
+
+    EXPECT_TRUE(vc::comparible(a, b));
+    EXPECT_TRUE(vc::comparible(b, a));
 }

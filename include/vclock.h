@@ -1,40 +1,19 @@
+#ifndef VC_VCLOCK
+#define VC_VCLOCK
+
 #include <vector>
 #include <string>
 
+#include "clock.h"
+
 namespace vc
 {
-    struct clock
-    {
-        using name_type = std::string;
-        using tick_type = long long int;
-
-        name_type name;
-        tick_type tick;
-
-        void operator++();
-
-        void update(const clock &other);
-
-        friend bool operator<(const clock &lhs, const clock &rhs);
-        friend bool operator>(const clock &lhs, const clock &rhs);
-
-        friend bool operator<=(const clock &lhs, const clock &rhs);
-        friend bool operator>=(const clock &lhs, const clock &rhs);
-        friend bool operator==(const clock &lhs, const clock &rhs);
-    };
-
     class vclock
     {
-        std::vector<clock> causal_history;
-
     public:
-        using name_type = clock::name_type;
-        using tick_type = clock::tick_type;
+        using clock_type = clock;
 
-        clock default_clock;
-        clock last_ticked;
-
-        explicit vclock(clock default_clock);
+        explicit vclock(clock_type default_clock);
 
         void tick();
 
@@ -46,5 +25,13 @@ namespace vc
         friend bool operator<=(const vclock &lhs, const vclock &rhs);
         friend bool operator>=(const vclock &lhs, const vclock &rhs);
         friend bool operator==(const vclock &lhs, const vclock &rhs);
+
+    private:
+        std::vector<clock_type> causal_history;
+
+        clock_type::name_type default_clock;
+        clock_type::name_type last_ticked;
     };
 } // namespace vc
+
+#endif

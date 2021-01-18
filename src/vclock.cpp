@@ -2,68 +2,22 @@
 #include <algorithm>
 
 #include "vclock.h"
+#include "clock.h"
 
 namespace vc
 {
-    bool operator<(const clock &lhs, const clock &rhs)
-    {
-        assert(lhs.name == rhs.name);
-
-        return lhs.tick < rhs.tick;
-    }
-
-    bool operator>(const clock &lhs, const clock &rhs)
-    {
-        assert(lhs.name == rhs.name);
-
-        return lhs.tick > rhs.tick;
-    }
-
-    bool operator<=(const clock &lhs, const clock &rhs)
-    {
-        assert(lhs.name == rhs.name);
-
-        return lhs.tick <= rhs.tick;
-    }
-
-    bool operator>=(const clock &lhs, const clock &rhs)
-    {
-        assert(lhs.name == rhs.name);
-
-        return lhs.tick >= rhs.tick;
-    }
-
-    bool operator==(const clock &lhs, const clock &rhs)
-    {
-        assert(lhs.name == rhs.name);
-
-        return lhs.tick == rhs.tick;
-    }
-
-    void clock::operator++()
-    {
-        tick++;
-    }
-
-    void clock::update(const clock &other)
-    {
-        assert(name == other.name);
-
-        tick = std::max(tick, other.tick);
-    }
-
     struct same_clock
     {
-        clock lhs;
+        clock::name_type lhs;
 
         bool operator()(const clock &rhs) const
         {
-            return rhs.name == lhs.name;
+            return rhs.name == lhs;
         }
     };
 
     vclock::vclock(clock default_clock)
-        : causal_history({default_clock}), default_clock(default_clock), last_ticked(default_clock)
+        : causal_history({default_clock}), default_clock(default_clock.name), last_ticked(default_clock.name)
     {
     }
 
@@ -79,7 +33,7 @@ namespace vc
 
         for (const auto &src_clock : src.causal_history)
         {
-            auto dst_clock = std::find_if(std::begin(dest.causal_history), std::end(dest.causal_history), same_clock{src_clock});
+            auto dst_clock = std::find_if(std::begin(dest.causal_history), std::end(dest.causal_history), same_clock{src_clock.name});
 
             if (dst_clock == std::cend(dest.causal_history))
             {
@@ -129,7 +83,7 @@ namespace vc
         }
         else
         {
-            return *lhs_last_ticked < *rhs_clock || *lhs_last_ticked == *rhs_clock && lhs.last_ticked.name != rhs.last_ticked.name;
+            return *lhs_last_ticked < *rhs_clock || *lhs_last_ticked == *rhs_clock && lhs.last_ticked != rhs.last_ticked;
         }
     }
 
@@ -145,7 +99,7 @@ namespace vc
         }
         else
         {
-            return *rhs_last_ticked < *lhs_clock || *rhs_last_ticked == *lhs_clock && lhs.last_ticked.name != rhs.last_ticked.name;
+            return *rhs_last_ticked < *lhs_clock || *rhs_last_ticked == *lhs_clock && lhs.last_ticked != rhs.last_ticked;
         }
     }
 
@@ -161,6 +115,9 @@ namespace vc
 
     bool operator==(const vclock &lhs, const vclock &rhs)
     {
-        return lhs.last_ticked.name == rhs.last_ticked.name && lhs.last_ticked == rhs.last_ticked;
+        auto lhs_last_ticked = std::find_if(std::cbegin(lhs.causal_history), std::cend(lhs.causal_history), same_clock{lhs.last_ticked});
+        auto rhs_last_ticked = std::find_if(std::cbegin(rhs.causal_history), std::cend(rhs.causal_history), same_clock{rhs.last_ticked});
+
+        return lhs.last_ticked == rhs.last_ticked && *lhs_last_ticked == *rhs_last_ticked;
     }
 } // namespace vc
