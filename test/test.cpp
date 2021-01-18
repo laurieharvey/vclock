@@ -3,6 +3,36 @@
 #include "vclock.h"
 #include "utilities.h"
 
+TEST(poset, reflexivity)
+{
+    EXPECT_LE(vc::vclock(vc::clock{"a", 0}), vc::vclock(vc::clock{"a", 1}));
+}
+
+TEST(poset, antisymmetry)
+{
+    vc::vclock a(vc::clock{"a", 0});
+    vc::vclock b(vc::clock{"b", 0});
+
+    merge(a, b);
+
+    EXPECT_TRUE(a <= b);
+    EXPECT_FALSE(a >= b);
+}
+
+TEST(poset, transitivity)
+{
+    vc::vclock a(vc::clock{"a", 0});
+    vc::vclock b(vc::clock{"b", 0});
+    vc::vclock c(vc::clock{"c", 0});
+
+    merge(a, b);
+    merge(b, c);
+
+    EXPECT_LE(a, b);
+    EXPECT_LE(b, c);
+    EXPECT_LE(a, c);
+}
+
 TEST(vclock, precedes)
 {
     EXPECT_LT(vc::vclock(vc::clock{"a", 0}), vc::vclock(vc::clock{"a", 1}));
