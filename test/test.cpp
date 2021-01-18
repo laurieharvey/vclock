@@ -52,3 +52,60 @@ TEST(vclock, comparible)
     EXPECT_TRUE(vc::comparible(a, b));
     EXPECT_TRUE(vc::comparible(b, a));
 }
+
+TEST(vclock, full)
+{
+    vc::vclock a(vc::clock{"a", 0});
+    vc::vclock b(vc::clock{"b", 0});
+    vc::vclock c(vc::clock{"c", 0});
+
+    EXPECT_FALSE(vc::comparible(a, b));
+    EXPECT_FALSE(vc::comparible(b, c));
+    EXPECT_FALSE(vc::comparible(c, a));
+
+    merge(a, b);
+
+    EXPECT_TRUE(vc::comparible(a, b));
+    EXPECT_FALSE(vc::comparible(b, c));
+    EXPECT_FALSE(vc::comparible(c, a));
+
+    EXPECT_LT(a, b);
+    EXPECT_GT(b, a);
+    
+    b.tick();
+
+    EXPECT_TRUE(vc::comparible(a, b));
+    EXPECT_FALSE(vc::comparible(b, c));
+    EXPECT_FALSE(vc::comparible(c, a));
+
+    EXPECT_LT(a, b);
+    EXPECT_GT(b, a);
+
+    merge(b, c);
+
+    EXPECT_TRUE(vc::comparible(a, b));
+    EXPECT_TRUE(vc::comparible(b, c));
+    EXPECT_TRUE(vc::comparible(c, a));
+
+    EXPECT_LT(a, b);
+    EXPECT_LT(b, c);
+    EXPECT_LT(a, c);
+    EXPECT_GT(c, b);
+    EXPECT_GT(b, a);
+    EXPECT_GT(c, a);
+
+    merge(c, a);
+
+    EXPECT_EQ(c, a);
+    EXPECT_EQ(a, c);
+    EXPECT_GT(a, b);
+    EXPECT_LT(b, a);
+    
+    a.tick();
+    b.tick();
+    c.tick();
+
+    EXPECT_FALSE(vc::comparible(a, b));
+    EXPECT_FALSE(vc::comparible(b, c));
+    EXPECT_FALSE(vc::comparible(c, a));
+}
