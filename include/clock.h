@@ -17,8 +17,6 @@ namespace vc
 
         void operator++(int);
 
-        void update(const clock &other);
-
         friend bool operator< (const clock &lhs, const clock &rhs);
         friend bool operator> (const clock &lhs, const clock &rhs);
         friend bool operator<=(const clock &lhs, const clock &rhs);

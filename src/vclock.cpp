@@ -40,8 +40,7 @@ namespace vc
                 if ((*dst_clock) < src_clock)
                 {
                     one_dst_clock_precedes_src = true;
-
-                    dst_clock->update(src_clock);
+                    *dst_clock = std::max( *dst_clock, src_clock );
                 }
                 else if ((*dst_clock) > src_clock)
                 {

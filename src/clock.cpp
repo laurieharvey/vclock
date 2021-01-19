@@ -49,11 +49,4 @@ namespace vc
     {
         tick++;
     }
-
-    void clock::update(const clock &other)
-    {
-        assert(name == other.name);
-
-        tick = std::max(tick, other.tick);
-    }
 } // namespace vc
