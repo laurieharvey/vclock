@@ -102,7 +102,7 @@ TEST(vclock, full)
     EXPECT_LT(a, b);
     EXPECT_GT(b, a);
     
-    b.tick();
+    b++;
 
     EXPECT_TRUE(vc::comparible(a, b));
     EXPECT_FALSE(vc::comparible(b, c));
@@ -131,9 +131,9 @@ TEST(vclock, full)
     EXPECT_GT(a, b);
     EXPECT_LT(b, a);
     
-    a.tick();
-    b.tick();
-    c.tick();
+    a++;
+    b++;
+    c++;
 
     EXPECT_FALSE(vc::comparible(a, b));
     EXPECT_FALSE(vc::comparible(b, c));

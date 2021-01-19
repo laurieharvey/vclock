@@ -13,13 +13,12 @@ namespace vc
         name_type name;
         tick_type tick;
 
-        void operator++();
+        void operator++(int);
 
         void update(const clock &other);
 
-        friend bool operator<(const clock &lhs, const clock &rhs);
-        friend bool operator>(const clock &lhs, const clock &rhs);
-
+        friend bool operator< (const clock &lhs, const clock &rhs);
+        friend bool operator> (const clock &lhs, const clock &rhs);
         friend bool operator<=(const clock &lhs, const clock &rhs);
         friend bool operator>=(const clock &lhs, const clock &rhs);
         friend bool operator==(const clock &lhs, const clock &rhs);

@@ -21,12 +21,6 @@ namespace vc
     {
     }
 
-    void vclock::tick()
-    {
-        ++(*std::find_if(std::begin(causal_history), std::end(causal_history), same_clock{default_clock}));
-        last_ticked = default_clock;
-    }
-
     void merge(const vclock &src, vclock &dest)
     {
         bool src_has_dst_clocks = true, no_dst_clocks_supercede_src = true, one_dst_clock_precedes_src = false;
@@ -67,8 +61,14 @@ namespace vc
         }
         else
         {
-            dest.tick();
+            dest++;
         }
+    }
+
+    void vclock::operator++(int)
+    {
+        (*std::find_if(std::begin(causal_history), std::end(causal_history), same_clock{default_clock}))++;
+        last_ticked = default_clock;
     }
 
     bool operator<(const vclock &lhs, const vclock &rhs)

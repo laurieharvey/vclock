@@ -40,7 +40,7 @@ namespace vc
         return lhs.tick == rhs.tick;
     }
 
-    void clock::operator++()
+    void clock::operator++(int)
     {
         tick++;
     }
