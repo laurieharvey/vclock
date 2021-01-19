@@ -14,7 +14,7 @@ namespace vc
         using clock_type = clock;
 
         /*
-         * Constuct the vector clock with the local clock
+         * Constuct the vector clock with the scalar clock
          */
         explicit vclock(clock_type local_clock);
 
