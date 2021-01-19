@@ -13,6 +13,8 @@ namespace vc
         name_type name;
         tick_type tick;
 
+        explicit clock(name_type name, tick_type tick);
+
         void operator++(int);
 
         void update(const clock &other);
