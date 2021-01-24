@@ -5,37 +5,37 @@
 
 namespace vc
 {
-    clock::clock(tick_type tick)
+    sclock::sclock(tick_type tick)
         : tick(tick)
     {
     }
 
-    bool operator<(const clock &lhs, const clock &rhs)
+    bool operator<(const sclock &lhs, const sclock &rhs)
     {
         return lhs.tick < rhs.tick;
     }
 
-    bool operator>(const clock &lhs, const clock &rhs)
+    bool operator>(const sclock &lhs, const sclock &rhs)
     {
         return lhs.tick > rhs.tick;
     }
 
-    bool operator<=(const clock &lhs, const clock &rhs)
+    bool operator<=(const sclock &lhs, const sclock &rhs)
     {
         return lhs.tick <= rhs.tick;
     }
 
-    bool operator>=(const clock &lhs, const clock &rhs)
+    bool operator>=(const sclock &lhs, const sclock &rhs)
     {
         return lhs.tick >= rhs.tick;
     }
 
-    bool operator==(const clock &lhs, const clock &rhs)
+    bool operator==(const sclock &lhs, const sclock &rhs)
     {
         return lhs.tick == rhs.tick;
     }
 
-    void clock::operator++(int)
+    void sclock::operator++(int)
     {
         tick++;
     }

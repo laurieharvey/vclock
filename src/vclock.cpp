@@ -6,7 +6,7 @@
 
 namespace vc
 {
-    vclock::vclock(clock_type::name_type local_clock_name, clock local_clock)
+    vclock::vclock(clock_type::name_type local_clock_name, clock_type local_clock)
         : causal_history{{local_clock_name, local_clock}}
         , local_clock_(local_clock_name)
         , last_ticked_(local_clock_name)

@@ -11,7 +11,7 @@ namespace vc
     class vclock
     {
     public:
-        using clock_type = clock;
+        using clock_type = sclock;
 
         /*
          * Constuct the vector clock with its local scalar clock

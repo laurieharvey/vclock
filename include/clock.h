@@ -5,7 +5,7 @@
 
 namespace vc
 {
-    class clock
+    class sclock
     {
     public:
         using name_type = std::string;
@@ -14,7 +14,7 @@ namespace vc
         /*
          * Construct the scalar clock with name and starting time
          */
-        explicit clock(tick_type tick);
+        explicit sclock(tick_type tick);
 
         /*
          * Increment the scalar clock's hand
@@ -24,11 +24,11 @@ namespace vc
         /*
          * Binary relations for the totally ordered set
          */
-        friend bool operator< (const clock &lhs, const clock &rhs);
-        friend bool operator> (const clock &lhs, const clock &rhs);
-        friend bool operator<=(const clock &lhs, const clock &rhs);
-        friend bool operator>=(const clock &lhs, const clock &rhs);
-        friend bool operator==(const clock &lhs, const clock &rhs);
+        friend bool operator< (const sclock &lhs, const sclock &rhs);
+        friend bool operator> (const sclock &lhs, const sclock &rhs);
+        friend bool operator<=(const sclock &lhs, const sclock &rhs);
+        friend bool operator>=(const sclock &lhs, const sclock &rhs);
+        friend bool operator==(const sclock &lhs, const sclock &rhs);
 
     private:
         tick_type tick;
