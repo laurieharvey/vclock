@@ -1,5 +1,5 @@
-#ifndef VC_CLOCK
-#define VC_CLOCK
+#ifndef VC_SCLOCK
+#define VC_SCLOCK
 
 #include <string>
 

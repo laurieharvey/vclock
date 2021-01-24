@@ -1,7 +1,7 @@
 #include <cassert>
 #include <algorithm>
 
-#include "clock.h"
+#include "sclock.h"
 
 namespace vc
 {

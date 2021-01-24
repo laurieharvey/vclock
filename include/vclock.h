@@ -4,7 +4,7 @@
 #include <map>
 #include <string>
 
-#include "clock.h"
+#include "sclock.h"
 
 namespace vc
 {

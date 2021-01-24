@@ -8,7 +8,7 @@ include_directories(include)
 
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY "${CMAKE_SOURCE_DIR}/bin")
 
-add_executable(test test/test.cpp src/vclock.cpp src/clock.cpp src/utilities.cpp)
+add_executable(test test/test.cpp src/vclock.cpp src/sclock.cpp src/utilities.cpp)
 
 target_link_libraries(test libgtest.a)
 target_link_libraries(test libgtest_main.a)

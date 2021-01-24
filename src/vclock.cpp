@@ -2,7 +2,6 @@
 #include <algorithm>
 
 #include "vclock.h"
-#include "clock.h"
 
 namespace vc
 {
