@@ -1,7 +1,7 @@
 #ifndef VC_VCLOCK
 #define VC_VCLOCK
 
-#include <vector>
+#include <map>
 #include <string>
 
 #include "clock.h"
@@ -14,9 +14,9 @@ namespace vc
         using clock_type = clock;
 
         /*
-         * Constuct the vector clock with the local scalar clock
+         * Constuct the vector clock with its local scalar clock
          */
-        explicit vclock(clock_type local_clock);
+        explicit vclock(clock_type::name_type local_clock_name, clock_type local_clock);
 
         /*
          * Merge two vector clocks
@@ -41,9 +41,9 @@ namespace vc
         friend bool operator==(const vclock &lhs, const vclock &rhs);
 
     private:
-        std::vector<clock_type> causal_history;
-        clock_type::name_type default_clock;
-        clock_type::name_type last_ticked;
+        std::map<clock_type::name_type, clock_type> causal_history;
+        clock_type::name_type local_clock_;
+        clock_type::name_type last_ticked_;
     };
 } // namespace vc
 

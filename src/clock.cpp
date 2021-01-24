@@ -5,43 +5,33 @@
 
 namespace vc
 {
-    clock::clock(name_type name, tick_type tick)
-        : name(name), tick(tick)
+    clock::clock(tick_type tick)
+        : tick(tick)
     {
     }
 
     bool operator<(const clock &lhs, const clock &rhs)
     {
-        assert(lhs.name == rhs.name);
-
         return lhs.tick < rhs.tick;
     }
 
     bool operator>(const clock &lhs, const clock &rhs)
     {
-        assert(lhs.name == rhs.name);
-
         return lhs.tick > rhs.tick;
     }
 
     bool operator<=(const clock &lhs, const clock &rhs)
     {
-        assert(lhs.name == rhs.name);
-
         return lhs.tick <= rhs.tick;
     }
 
     bool operator>=(const clock &lhs, const clock &rhs)
     {
-        assert(lhs.name == rhs.name);
-
         return lhs.tick >= rhs.tick;
     }
 
     bool operator==(const clock &lhs, const clock &rhs)
     {
-        assert(lhs.name == rhs.name);
-
         return lhs.tick == rhs.tick;
     }
 

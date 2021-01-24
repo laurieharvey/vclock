@@ -5,13 +5,13 @@
 
 TEST(poset, reflexivity)
 {
-    EXPECT_LE(vc::vclock(vc::clock("a", 0)), vc::vclock(vc::clock("a", 1)));
+    EXPECT_LE(vc::vclock("a",vc::clock(0)), vc::vclock("a",vc::clock(1)));
 }
 
 TEST(poset, antisymmetry)
 {
-    vc::vclock a(vc::clock("a", 0));
-    vc::vclock b(vc::clock("b", 0));
+    vc::vclock a("a",vc::clock(0));
+    vc::vclock b("b",vc::clock(0));
 
     merge(a, b);
 
@@ -21,9 +21,9 @@ TEST(poset, antisymmetry)
 
 TEST(poset, transitivity)
 {
-    vc::vclock a(vc::clock("a", 0));
-    vc::vclock b(vc::clock("b", 0));
-    vc::vclock c(vc::clock("c", 0));
+    vc::vclock a("a",vc::clock(0));
+    vc::vclock b("b",vc::clock(0));
+    vc::vclock c("c",vc::clock(0));
 
     merge(a, b);
     merge(b, c);
@@ -35,23 +35,23 @@ TEST(poset, transitivity)
 
 TEST(vclock, precedes)
 {
-    EXPECT_LT(vc::vclock(vc::clock("a", 0)), vc::vclock(vc::clock("a", 1)));
+    EXPECT_LT(vc::vclock("a",vc::clock(0)), vc::vclock("a",vc::clock(1)));
 }
 
 TEST(vclock, supersedes)
 {
-    EXPECT_GT(vc::vclock(vc::clock("a", 1)), vc::vclock(vc::clock("a", 0)));
+    EXPECT_GT(vc::vclock("a",vc::clock(1)), vc::vclock("a",vc::clock(0)));
 }
 
 TEST(vclock, equals)
 {
-    EXPECT_EQ(vc::vclock(vc::clock("a", 0)), vc::vclock(vc::clock("a", 0)));
+    EXPECT_EQ(vc::vclock("a",vc::clock(0)), vc::vclock("a",vc::clock(0)));
 }
 
 TEST(vclock, merge)
 {
-    vc::vclock a(vc::clock("a", 0));
-    vc::vclock b(vc::clock("b", 0));
+    vc::vclock a("a",vc::clock(0));
+    vc::vclock b("b",vc::clock(0));
 
     merge(b, a);
 
@@ -66,8 +66,8 @@ TEST(vclock, merge)
 
 TEST(vclock, comparible)
 {
-    vc::vclock a(vc::clock("a", 0));
-    vc::vclock b(vc::clock("b", 0));
+    vc::vclock a("a",vc::clock(0));
+    vc::vclock b("b",vc::clock(0));
 
     EXPECT_FALSE(vc::comparible(a, b));
     EXPECT_FALSE(vc::comparible(b, a));
@@ -85,9 +85,9 @@ TEST(vclock, comparible)
 
 TEST(vclock, full)
 {
-    vc::vclock a(vc::clock("a", 0));
-    vc::vclock b(vc::clock("b", 0));
-    vc::vclock c(vc::clock("c", 0));
+    vc::vclock a("a",vc::clock(0));
+    vc::vclock b("b",vc::clock(0));
+    vc::vclock c("c",vc::clock(0));
 
     EXPECT_FALSE(vc::comparible(a, b));
     EXPECT_FALSE(vc::comparible(b, c));
