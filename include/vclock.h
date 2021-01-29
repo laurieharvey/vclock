@@ -12,12 +12,10 @@ namespace vc
     {
     public:
         using clock_type = sclock;
-
         /*
          * Constuct the vector clock with its local scalar clock
          */
         explicit vclock(clock_type::name_type local_clock_name, clock_type local_clock);
-
         /*
          * Merge two vector clocks
          * If dest precedes src then update dest (dest after == src)
@@ -25,12 +23,10 @@ namespace vc
          * and increment the result (dest before < dest after)
          */
         friend void merge(const vclock &src, vclock &dest);
-
         /*
          * Increment the vector clock's hand
          */
         void operator++(int);
-
         /*
          * Binary relations for the partially ordered set
          */

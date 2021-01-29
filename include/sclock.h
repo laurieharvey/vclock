@@ -10,17 +10,14 @@ namespace vc
     public:
         using name_type = std::string;
         using tick_type = long long int;
-
         /*
          * Construct the scalar clock with name and starting time
          */
         explicit sclock(tick_type tick);
-
         /*
          * Increment the scalar clock's hand
          */
         void operator++(int);
-
         /*
          * Binary relations for the totally ordered set
          */
